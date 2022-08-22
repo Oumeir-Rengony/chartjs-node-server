@@ -61,6 +61,32 @@ const drawLabels = (chart) => {
     })
 }
 
+const drawAxes = (chart) => {
+
+    let ctx = chart.chart.ctx;
+    let chartArea = chart.chartArea;
+    let meta = chart.getDatasetMeta(0);
+    const len = meta.data.length - 1;
+    let left = meta.data[0]._model.x;
+    let right = meta.data[len]._model.x;
+    
+    //y axis base line
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = chart.config.options.BandConfig.baseColor;
+    ctx.moveTo(meta.data[0]._model.x, chartArea.top);
+    ctx.lineTo(meta.data[0]._model.x, chartArea.bottom + 10);
+    ctx.stroke();
+    
+    //x axis base line
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = chart.config.options.BandConfig.baseColor;
+    ctx.moveTo(left - 10, chartArea.bottom);
+    ctx.lineTo(right, chartArea.bottom);
+    ctx.stroke();
+}
+
 const drawTooltip = (ChartJS, pluginTooltips) => {
     ChartJS.helpers.each(pluginTooltips, function (tooltip) {
         tooltip.initialize();
@@ -123,6 +149,8 @@ const chartCallback = (ChartJS) => {
                 drawTooltip(ChartJS, chart.pluginTooltips);
                 chart.options.tooltips.enabled = false;
             }
+
+            drawAxes(chart);
         }
        
     });
