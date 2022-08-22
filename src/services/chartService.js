@@ -29,13 +29,36 @@ const drawInterline = (chart) => {
 
     for (let i = 0; i < len; i++) {
         if (i % 2 !== 0) {
-        ctx.beginPath();
-        ctx.strokeStyle = chart.config.options.BandConfig.interlineColor;
-        ctx.moveTo(meta.data[i]._model.x, chartArea.top);
-        ctx.lineTo(meta.data[i]._model.x, chartArea.bottom + 10);
-        ctx.stroke();
+            ctx.beginPath();
+            ctx.strokeStyle = chart.config.options.BandConfig.interlineColor;
+            ctx.moveTo(meta.data[i]._model.x, chartArea.top);
+            ctx.lineTo(meta.data[i]._model.x, chartArea.bottom + 10);
+            ctx.stroke();
         }
     }
+}
+
+const drawLabels = (chart) => {
+
+    let ctx = chart.chart.ctx;
+    let meta = chart.getDatasetMeta(0);
+    const len = meta.data.length - 1;
+    const datasets = chart.config.data.datasets;
+    const padding = chart.config.options.BandConfig.labelPadding;
+
+    ctx.fillStyle = chart.options?.labelFontColor;
+    ctx.textBaseline = 'middle';
+    // ctx.font = `600 12px ${chart.config.options.BandConfig.fontFamily}`
+
+    datasets.forEach((data, index) => {
+        if (index !== 3) {
+            const metadata = chart.controller.getDatasetMeta(index)
+            const label = data?.label || ''
+            const xOffset = metadata.data[len]._model.x + padding;
+            const yOffset = metadata.data[len]._model.y;
+            ctx.fillText(label, xOffset, yOffset);
+        }
+    })
 }
   
 const chartCallback = (ChartJS) => {
@@ -54,6 +77,9 @@ const chartCallback = (ChartJS) => {
             }
 
             drawInterline(chart);
+            ctx.save();
+
+            drawLabels(chart);
             ctx.save();
         },
        
