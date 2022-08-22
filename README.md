@@ -144,3 +144,12 @@ npm run dev
 		}
 	}
     ```
+    
+Response format is : 
+```bash
+{
+    data: {
+        ...content
+    }
+}
+```
