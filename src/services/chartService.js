@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { getMinMax } = require('../utils/utils.js');
 const { CanvasRenderService   } = require('chartjs-node-canvas');
 
