@@ -6,9 +6,8 @@ class ChartController {
       return "Server is up an running";
     }
   
-    async createChart(data) {
-      createChartImage(data)
-      // return data;
+    async createChart(chartConfig) {
+      return createChartImage(chartConfig);
     }
   }
   

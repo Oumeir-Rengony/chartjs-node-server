@@ -321,14 +321,14 @@ const createChartImage = async (chartConfig) => {
   // define data
   const data = getData(chartConfig);
 
-  const imageBuffer = await canvasRenderService.renderToBuffer({
+  const base64Image = await canvasRenderService.renderToDataURL({
     type: 'line',
     data,
     options
   });
+
   
-  fs.writeFileSync('./chart.png', imageBuffer);
- 
+  return base64Image;
 };
 
 module.exports = {
