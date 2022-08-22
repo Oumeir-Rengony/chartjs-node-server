@@ -3,10 +3,41 @@ const { getMinMax } = require('../utils/utils.js');
 const { CanvasRenderService   } = require('chartjs-node-canvas');
 
 
+//draw stripped horizontal band
+const drawBands = (chart) => {
+    let ctx = chart.chart.ctx;
+    let chartArea = chart.chartArea;
+    let meta = chart.getDatasetMeta(0);
+    const len = meta.data.length - 1;
+    let left = meta.data[0]._model.x;
+    let right = meta.data[len]._model.x;
+    const spaceV = (chartArea.bottom - chartArea.top) / 7;
+    const spaceH = right - left;
+    
+    ctx.fillStyle = chart.config.options.BandConfig.backgroundColor;
+    ctx.fillRect(left, chartArea.top, spaceH, spaceV);
+    ctx.fillRect(left, chartArea.top + spaceV * 2, spaceH, spaceV);
+    ctx.fillRect(left, chartArea.top + spaceV * 4, spaceH, spaceV);
+    ctx.fillRect(left, chartArea.top+ spaceV * 6, spaceH, spaceV);
+}
+  
 const chartCallback = (ChartJS) => {
     ChartJS.defaults.global.defaultFontSize = 12;
     // ChartJS.defaults.global.defaultFontFamily = "Harmonia Sans Std Regular";
     ChartJS.defaults.global.defaultFontColor = "#1e647d";
+
+    ChartJS.plugins.register({
+        beforeDraw: function (chart) {
+            let ctx = chart.chart.ctx;
+            
+            if (chart.config.options.BandConfig) {
+                ctx.save();
+                drawBands(chart);
+                ctx.save();
+            }
+        },
+       
+    });
 }
 
 const getOptions = (chartConfig, minMaxValue) => {
