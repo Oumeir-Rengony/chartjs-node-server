@@ -60,6 +60,15 @@ const drawLabels = (chart) => {
         }
     })
 }
+
+const drawTooltip = (ChartJS, pluginTooltips) => {
+    ChartJS.helpers.each(pluginTooltips, function (tooltip) {
+        tooltip.initialize();
+        tooltip.update();
+        tooltip.pivot();
+        tooltip.draw();
+    });
+}
   
 const chartCallback = (ChartJS) => {
     ChartJS.defaults.global.defaultFontSize = 12;
@@ -67,6 +76,31 @@ const chartCallback = (ChartJS) => {
     ChartJS.defaults.global.defaultFontColor = "#1e647d";
 
     ChartJS.plugins.register({
+        beforeRender: function (chart) {
+            if (chart.config.options.showAllTooltips) {
+                chart.pluginTooltips = [];
+                chart.config.data.datasets.forEach((dataset, i) => {
+                if (
+                    dataset &&
+                    (i === 3 ||
+                    i === chart.config.data.datasets.length - 1)
+                ) {
+                    chart.getDatasetMeta(i).data.forEach((sector) => {
+                        chart.pluginTooltips.push(new (ChartJS).Tooltip({
+                                _chart: chart.chart,
+                                _chartInstance: chart,
+                                _data: chart.data,
+                                _options: chart.options.tooltips,
+                                _active: [sector]
+                            }, chart));
+                        });
+                    }   
+        
+                });
+                // turn off normal tooltips
+                chart.options.tooltips.enabled = false;
+            }
+        },
         beforeDraw: function (chart) {
             let ctx = chart.chart.ctx;
             
@@ -82,6 +116,14 @@ const chartCallback = (ChartJS) => {
             drawLabels(chart);
             ctx.save();
         },
+        afterDraw: function (chart) {
+            if (chart.config.options.showAllTooltips) {
+                // turn on tooltips
+                chart.options.tooltips.enabled = true;
+                drawTooltip(ChartJS, chart.pluginTooltips);
+                chart.options.tooltips.enabled = false;
+            }
+        }
        
     });
 }
