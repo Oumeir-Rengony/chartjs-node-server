@@ -303,7 +303,9 @@ const getData = (chartConfig) => {
  * @param { boolean } isMobile          check if on mobile device
  * @param { number } minVerticalValue   Vertical axis minimum value
  * @param { number } stepVerticalValue  Vertical axis step Value
- * @param { string } chartAltText title of the chart
+ * @param { string } chartAltText       title of the chart
+ * @param { Object } colors             colors for the chart
+
  */
 
 const createChartImage = async (chartConfig) => {
