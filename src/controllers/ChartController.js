@@ -1,14 +1,17 @@
+const { createChartImage } = require('../services/chartService');
+
 class ChartController {
 
     async pingServer() {
-      console.log('Server is up an running');
       return "Server is up an running";
     }
   
     async createChart(data) {
-      console.log("createChart");
-      return data;
+      createChartImage(data)
+      // return data;
     }
   }
   
   module.exports = ChartController;
+
+

@@ -9,7 +9,7 @@ router.get('/ping', async (req,res) => {
 });
 
 
-router.post('/charts', async (req,res) => {
+router.post('/createChart', async (req,res) => {
     const response = await new ChartController().createChart(req.body);
     res.send(response);
 });
