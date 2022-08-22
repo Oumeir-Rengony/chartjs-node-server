@@ -20,6 +20,23 @@ const drawBands = (chart) => {
     ctx.fillRect(left, chartArea.top + spaceV * 4, spaceH, spaceV);
     ctx.fillRect(left, chartArea.top+ spaceV * 6, spaceH, spaceV);
 }
+
+const drawInterline = (chart) => {
+    let ctx = chart.chart.ctx;
+    let chartArea = chart.chartArea;
+    let meta = chart.getDatasetMeta(0);
+    const len = meta.data.length - 1;
+
+    for (let i = 0; i < len; i++) {
+        if (i % 2 !== 0) {
+        ctx.beginPath();
+        ctx.strokeStyle = chart.config.options.BandConfig.interlineColor;
+        ctx.moveTo(meta.data[i]._model.x, chartArea.top);
+        ctx.lineTo(meta.data[i]._model.x, chartArea.bottom + 10);
+        ctx.stroke();
+        }
+    }
+}
   
 const chartCallback = (ChartJS) => {
     ChartJS.defaults.global.defaultFontSize = 12;
@@ -35,6 +52,9 @@ const chartCallback = (ChartJS) => {
                 drawBands(chart);
                 ctx.save();
             }
+
+            drawInterline(chart);
+            ctx.save();
         },
        
     });
