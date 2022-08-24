@@ -284,6 +284,19 @@ const getData = (chartConfig) => {
   };
 }
 
+/*  This is a safe check to remove whitespaces from colors.
+    whitespaces are added when object is Stringify
+*/
+const sanitizeColors = (colors) => {
+  let updatedColors = {};
+  for (const key in colors) {
+    const value = colors[key].trim();
+    updatedColors = {...updatedColors, [key]:value}
+  }
+
+  return updatedColors;
+}
+
 
  /**
  * chartConfig is an object containing the following properties:
@@ -308,6 +321,8 @@ const getData = (chartConfig) => {
  */
 
 const createChartImage = async (chartConfig) => {
+
+  chartConfig = {... chartConfig, colors: sanitizeColors(chartConfig.colors)};
 
   const canvasRenderService = new CanvasRenderService(chartConfig.width, chartConfig.height, chartCallback);
 
